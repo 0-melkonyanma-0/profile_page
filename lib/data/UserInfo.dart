@@ -3,6 +3,15 @@
 import 'dart:core';
 
 import 'package:dio/dio.dart';
+import 'package:profile_page/data/GetAccessToken.dart';
+
+var token;
+var AllMainData;
+var NIOKR;
+var UserEducation;
+var UserPublication;
+var UserGrant;
+var UserPatent;
 
 Future<String> getUserData(token, url) async =>
     Future.delayed(const Duration(milliseconds: 100), () async {
@@ -18,22 +27,18 @@ Future<String> getUserData(token, url) async =>
             },
           ),
         );
-        // print(response.headers);
+        // print(response.data);
         return response.data.toString();
       } on DioError {
         return getUserData(token, url);
       }
     });
 
-var AllMainData;
-var NIOKR;
-var UserEducation;
-var UserPublication;
-var UserGrant;
-var UserPatent;
-
-UserInfo getUserInfo(token) {
+UserInfo getUserInfo(login,password) {
   UserInfo user = UserInfo();
+
+  getAccessToken(login, password).then((value) => token=value);
+
   getUserData(token, 'https://papi.mrsu.ru/v1/User')
       .then((value) => AllMainData = value);
   getUserData(token, 'https://papi.mrsu.ru/v1/UserEducation')

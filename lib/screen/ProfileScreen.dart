@@ -1,14 +1,9 @@
 // ignore_for_file: must_be_immutable, prefer_typing_uninitialized_variables
 
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:profile_page/data/UserInfo.dart';
-import 'package:profile_page/data/GetAccessToken.dart';
 import 'package:profile_page/custom/button.dart';
 import 'package:profile_page/custom/scroll_bar.dart';
-
-var token;
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -27,17 +22,17 @@ class ProfileScreenArguments {
 }
 
 class _ProfileScreen extends State<ProfileScreen> {
-
   @override
   Widget build(BuildContext ctx) {
+    var arguments;
 
-    final arguments = (ModalRoute.of(context)?.settings.arguments ??
-        ProfileScreenArguments('', '')) as ProfileScreenArguments;
+    late UserInfo user;
 
-    getAccessToken(arguments.login, arguments.password)
-        .then((value) => token = value);
-
-    UserInfo user = getUserInfo(token);
+    setState(() {
+      arguments = (ModalRoute.of(context)?.settings.arguments ??
+          ProfileScreenArguments('', '')) as ProfileScreenArguments;
+      user = getUserInfo(arguments.login, arguments.password);
+    });
 
     return MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -49,8 +44,9 @@ class _ProfileScreen extends State<ProfileScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
+                  const Padding(padding: EdgeInsets.all(50)),
                   SizedBox(
-                    height: 40,
+                    height: 60,
                     width: 250,
                     child: TextButton(
                       style: ButtonStyle(
@@ -62,8 +58,8 @@ class _ProfileScreen extends State<ProfileScreen> {
                             MaterialStateProperty.all<Color>(Colors.white),
                       ),
                       onPressed: () {
-                        arguments.login = "";
-                        arguments.password = "";
+                        // arguments.login = "";
+                        // arguments.password = "";
                         Navigator.pushReplacementNamed(ctx, "/");
                       },
                       child: const Text(
@@ -96,7 +92,7 @@ class _ProfileScreen extends State<ProfileScreen> {
                       )),
                   const Padding(padding: EdgeInsets.all(2)),
                   SizedBox(
-                      height: 90,
+                      height: 100,
                       width: 310,
                       child: Card(
                         color: Colors.black38,
@@ -128,7 +124,7 @@ class _ProfileScreen extends State<ProfileScreen> {
                       )),
                   const Padding(padding: EdgeInsets.all(2)),
                   SizedBox(
-                      height: 95,
+                      height: 100,
                       width: 310,
                       child: Card(
                         color: Colors.black38,
@@ -136,28 +132,30 @@ class _ProfileScreen extends State<ProfileScreen> {
                         child: Column(
                           children: [
                             TextBlock('\nНИОКР\n'),
-                            TextBlock(
-                                user.NIOKR == "" ? "Записей нет\n" : user.NIOKR),
+                            TextBlock(user.NIOKR == ""
+                                ? "Записей нет\n"
+                                : user.NIOKR),
                           ],
                         ),
                       )),
                   const Padding(padding: EdgeInsets.all(2)),
                   SizedBox(
-                      height: 80,
+                      height: 95,
                       width: 300,
                       child: Card(
                         color: Colors.black38,
                         child: Column(
                           children: [
                             TextBlock('\nГранты\n'),
-                            TextBlock(
-                                user.Grants == "" ? "Записей нет\n" : user.Grants),
+                            TextBlock(user.Grants == ""
+                                ? "Записей нет\n"
+                                : user.Grants),
                           ],
                         ),
                       )),
                   const Padding(padding: EdgeInsets.all(5)),
                   SizedBox(
-                      height: 80,
+                      height: 90,
                       width: 300,
                       child: Card(
                         color: Colors.black38,
@@ -170,6 +168,7 @@ class _ProfileScreen extends State<ProfileScreen> {
                           ],
                         ),
                       )),
+                  const Padding(padding: EdgeInsets.all(50)),
                 ],
               ),
             ),
@@ -177,4 +176,3 @@ class _ProfileScreen extends State<ProfileScreen> {
         ));
   }
 }
-
